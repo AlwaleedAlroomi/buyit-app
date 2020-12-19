@@ -76,7 +76,7 @@ class SignupScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(LoginScreen.id);
+                    Navigator.pushNamed(context, LoginScreen.id);
                   },
                   child: Text(
                     "Login",
