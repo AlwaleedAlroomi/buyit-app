@@ -2,10 +2,13 @@ import 'package:buyit/constants.dart';
 import 'package:buyit/screens/signup_screen.dart';
 import 'package:buyit/widgets/CustomTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:buyit/services/auth.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   static String id = 'LoginScreen';
+  String _email, _password;
+  final _auth = Auth();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -43,6 +46,9 @@ class LoginScreen extends StatelessWidget {
               height: height * .1,
             ),
             CustomTextField(
+              onClick: (value) {
+                _email = value;
+              },
               hint: "Enter your email",
               icon: Icons.email,
             ),
@@ -50,6 +56,9 @@ class LoginScreen extends StatelessWidget {
               height: height * .02,
             ),
             CustomTextField(
+              onClick: (value) {
+                _password = value;
+              },
               hint: "Enter your password",
               icon: Icons.lock,
             ),
@@ -57,23 +66,26 @@ class LoginScreen extends StatelessWidget {
               height: height * .05,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 150),
+              padding: const EdgeInsets.symmetric(horizontal: 130),
               child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: Colors.black,
+                child: Text(
+                  "Log in",
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                  color: Colors.black,
-                  child: Text(
-                    "Log in",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_globalKey.currentState.validate()) {
-                      //do something}
-                    }
-                  }),
+                ),
+                onPressed: () async {
+                  if (_globalKey.currentState.validate()) {
+                    _globalKey.currentState.save();
+                    final result = await _auth.signIp(_email, _password);
+                    print(result.user.uid);
+                  }
+                },
+              ),
             ),
             SizedBox(
               height: height * .05,
