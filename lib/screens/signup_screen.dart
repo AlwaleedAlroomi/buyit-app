@@ -3,10 +3,14 @@ import 'package:buyit/screens/login_screen.dart';
 import 'package:buyit/widgets/CustomLogo.dart';
 import 'package:buyit/widgets/CustomTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:buyit/services/auth.dart';
 
 class SignupScreen extends StatelessWidget {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   static String id = "SignupScreen";
+  String _email, _password;
+  final _auth = Auth();
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -21,6 +25,7 @@ class SignupScreen extends StatelessWidget {
               height: height * .1,
             ),
             CustomTextField(
+              onClick: (value) {},
               hint: "Enter your name",
               icon: Icons.perm_identity,
             ),
@@ -28,6 +33,9 @@ class SignupScreen extends StatelessWidget {
               height: height * .02,
             ),
             CustomTextField(
+              onClick: (value) {
+                _email = value;
+              },
               hint: "Enter your email",
               icon: Icons.email,
             ),
@@ -35,6 +43,9 @@ class SignupScreen extends StatelessWidget {
               height: height * .02,
             ),
             CustomTextField(
+              onClick: (value) {
+                _password = value;
+              },
               hint: "Enter your password",
               icon: Icons.lock,
             ),
@@ -42,7 +53,7 @@ class SignupScreen extends StatelessWidget {
               height: height * .05,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 150),
+              padding: const EdgeInsets.symmetric(horizontal: 130),
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -54,9 +65,13 @@ class SignupScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (_globalKey.currentState.validate()) {
-                    //do sonething
+                    _globalKey.currentState.save();
+                    print(_email);
+                    print(_password);
+                    final authResult = await _auth.signUp(_email, _password);
+                    print(authResult.user.uid);
                   }
                 },
               ),

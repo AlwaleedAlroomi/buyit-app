@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   final String hint;
   final IconData icon;
+  final Function onClick;
+  // ignore: missing_return
   String _errorMsg(String str) {
     switch (hint) {
       case "Enter your name":
@@ -15,7 +17,7 @@ class CustomTextField extends StatelessWidget {
     }
   }
 
-  CustomTextField({@required this.hint, this.icon});
+  CustomTextField({@required this.onClick, @required this.hint, this.icon});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,6 +29,7 @@ class CustomTextField extends StatelessWidget {
             return _errorMsg(hint);
           }
         },
+        onSaved: onClick,
         obscureText: hint == "Enter your password" ? true : false,
         cursorColor: kMainColor,
         decoration: InputDecoration(
