@@ -3,7 +3,9 @@ import 'package:buyit/screens/signup_screen.dart';
 import 'package:buyit/widgets/CustomTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:buyit/services/auth.dart';
+import 'package:flutter/services.dart';
 
+// ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   static String id = 'LoginScreen';
@@ -67,24 +69,34 @@ class LoginScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 130),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: Colors.black,
-                child: Text(
-                  "Log in",
-                  style: TextStyle(
-                    color: Colors.white,
+              child: Builder(
+                builder: (context) => FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                  color: Colors.black,
+                  child: Text(
+                    "Log in",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (_globalKey.currentState.validate()) {
+                      try {
+                        _globalKey.currentState.save();
+                        final result = await _auth.signIp(_email, _password);
+                        print(result.user.uid);
+                      } on PlatformException catch (e) {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.message),
+                          ),
+                        );
+                      }
+                    }
+                  },
                 ),
-                onPressed: () async {
-                  if (_globalKey.currentState.validate()) {
-                    _globalKey.currentState.save();
-                    final result = await _auth.signIp(_email, _password);
-                    print(result.user.uid);
-                  }
-                },
               ),
             ),
             SizedBox(
