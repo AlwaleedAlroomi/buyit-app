@@ -1,9 +1,14 @@
 import 'package:buyit/constants.dart';
+import 'package:buyit/provider/adminMode.dart';
+import 'package:buyit/provider/modelHud.dart';
+import 'file:///M:/flutter%20project/buyit/lib/screens/admin/AdminHome.dart';
+import 'file:///M:/flutter%20project/buyit/lib/screens/user/HomePage.dart';
 import 'package:buyit/screens/signup_screen.dart';
 import 'package:buyit/widgets/CustomTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:buyit/services/auth.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
@@ -11,6 +16,8 @@ class LoginScreen extends StatelessWidget {
   static String id = 'LoginScreen';
   String _email, _password;
   final _auth = Auth();
+  bool isAdmin = false;
+  final adminPassword = "Admin1234";
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -81,20 +88,8 @@ class LoginScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  onPressed: () async {
-                    if (_globalKey.currentState.validate()) {
-                      try {
-                        _globalKey.currentState.save();
-                        final result = await _auth.signIp(_email, _password);
-                        print(result.user.uid);
-                      } on PlatformException catch (e) {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.message),
-                          ),
-                        );
-                      }
-                    }
+                  onPressed: () {
+                    _validate(context);
                   },
                 ),
               ),
@@ -125,9 +120,91 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Provider.of<AdminMode>(context, listen: false)
+                            .changeisAdmin(true);
+                      },
+                      child: Text(
+                        "I\'m an admin.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Provider.of<AdminMode>(context).isAdmin
+                              ? kMainColor
+                              : Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Provider.of<AdminMode>(context, listen: false)
+                            .changeisAdmin(false);
+                      },
+                      child: Text(
+                        "I\'m a user",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Provider.of<AdminMode>(context).isAdmin
+                                ? Colors.white
+                                : kMainColor),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _validate(BuildContext context) async {
+    final modelhud = Provider.of<ModelHud>(context, listen: false);
+    modelhud.changeisLoading(true);
+    if (_globalKey.currentState.validate()) {
+      _globalKey.currentState.save();
+      if (Provider.of<AdminMode>(context, listen: false).isAdmin) {
+        if (_password == adminPassword) {
+          try {
+            await _auth.signIp(_email, _password);
+            Navigator.pushNamed(context, AdminHomeScreen.id);
+          } catch (e) {
+            modelhud.changeisLoading(false);
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.message),
+              ),
+            );
+          }
+        } else {
+          modelhud.changeisLoading(false);
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Something went wrong !"),
+            ),
+          );
+        }
+      } else {
+        try {
+          await _auth.signIp(_email, _password);
+          Navigator.pushNamed(context, HomePageScreen.id);
+        } catch (e) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.message),
+            ),
+          );
+        }
+      }
+    }
+    modelhud.changeisLoading(false);
   }
 }
