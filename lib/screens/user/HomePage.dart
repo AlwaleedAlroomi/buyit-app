@@ -8,7 +8,7 @@ class HomePageScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kMainColor,
       body: Center(
-        child: Text("Home Page"),
+        child: Image(image:AssetImage("assets/images/jackets/jacket2.jpg")),
       ),
     );
   }

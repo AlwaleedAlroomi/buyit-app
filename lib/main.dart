@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
             create: (context) => AdminMode()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         initialRoute: LoginScreen.id,
         routes: {
           LoginScreen.id: (context) => LoginScreen(),
