@@ -1,104 +1,97 @@
-import 'package:buyit/models/product.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:buyit/services/store.dart';
 import 'package:buyit/constants.dart';
+import 'package:buyit/models/product.dart';
+import 'package:buyit/services/store.dart';
+import 'package:buyit/widgets/CustomTextField.dart';
+import 'package:flutter/material.dart';
 
-class EditProduct extends StatefulWidget {
+class EditProduct extends StatelessWidget {
   static String id = "EditProduct";
-
-  @override
-  _EditProductState createState() => _EditProductState();
-}
-
-class _EditProductState extends State<EditProduct> {
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  String _name, _price, _description, _category, _imageLocation;
   final _store = Store();
   @override
   Widget build(BuildContext context) {
+    Product product = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-          stream: _store.loadProduct(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<Product> products = [];
-              for (var doc in snapshot.data.docs) {
-                var data = doc.data();
-                products.add(Product(
-                  pName: data[kProductName],
-                  pPrice: data[kProductPrice],
-                  pDescription: data[kProductDescription],
-                  pCategory: data[kProductCategory],
-                  pLocation: data[kProductLocation],
-                ));
-              }
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: .8),
-                itemBuilder: (context, index) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: GestureDetector(
-                    onTapUp: (details) {
-                      double dx = details.globalPosition.dx;
-                      double dy = details.globalPosition.dy;
-                      double dx2 = MediaQuery.of(context).size.width - dx;
-                      double dy2 = MediaQuery.of(context).size.width - dy;
-                      showMenu(context: context, position: RelativeRect.fromLTRB(dx, dy, dx2, dy2), items: [
-                        PopupMenuItem(
-                          child: Text("Edit"),
-                        ),
-                        PopupMenuItem(
-                          child: Text("Delete"),
-                        ),
-                      ]);
-                    },
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: Image(
-                            fit: BoxFit.fill,
-                            image: AssetImage(products[index].pLocation),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          child: Opacity(
-                            opacity: .6,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 60,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      products[index].pName,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text("\$ ${products[index].pPrice}"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+      body: Form(
+        key: _globalKey,
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomTextField(
+                  hint: "Product Name",
+                  onClick: (value) {
+                    _name = value;
+                  },
                 ),
-                itemCount: products.length,
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  hint: "Product Price",
+                  onClick: (value) {
+                    _price = value;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  hint: "Product Description",
+                  onClick: (value) {
+                    _description = value;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  hint: "Product Category",
+                  onClick: (value) {
+                    _category = value;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  hint: "Product Location",
+                  onClick: (value) {
+                    _imageLocation = value;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    if (_globalKey.currentState.validate()) {
+                      _globalKey.currentState.save();
+
+                      _store.editProduct(
+                          ({
+                            kProductName: _name,
+                            kProductPrice: _price,
+                            kProductDescription: _description,
+                            kProductCategory: _category,
+                            kProductLocation: _imageLocation,
+                          }),
+                          product.pId);
+                    }
+                  },
+                  child: Text("Edit Product"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

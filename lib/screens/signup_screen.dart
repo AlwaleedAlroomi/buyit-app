@@ -83,8 +83,8 @@ class SignupScreen extends StatelessWidget {
                             _globalKey.currentState.save();
                             try {
                               // ignore: unused_local_variable
-                              final authResult =
-                                  await _auth.signUp(_email, _password);
+                              final authResult = await _auth.signUp(
+                                  _email.trim(), _password.trim());
                               modelhud.changeisLoading(false);
                             } on PlatformException catch (e) {
                               modelhud.changeisLoading(false);

@@ -1,9 +1,10 @@
 import 'package:buyit/provider/adminMode.dart';
 import 'package:buyit/provider/modelHud.dart';
 import 'package:buyit/screens/admin/addProduct.dart';
+import 'package:buyit/screens/admin/Manageproduct.dart';
+import 'package:buyit/screens/admin/AdminHome.dart';
 import 'package:buyit/screens/admin/editProduct.dart';
-import 'file:///M:/flutter%20project/buyit/lib/screens/admin/AdminHome.dart';
-import 'file:///M:/flutter%20project/buyit/lib/screens/user/HomePage.dart';
+import 'package:buyit/screens/user/HomePage.dart';
 import 'package:buyit/screens/login_screen.dart';
 import 'package:buyit/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ModelHud>(
-            create:(context) => ModelHud()),
-        ChangeNotifierProvider<AdminMode>(
-            create: (context) => AdminMode()),
+        ChangeNotifierProvider<ModelHud>(create: (context) => ModelHud()),
+        ChangeNotifierProvider<AdminMode>(create: (context) => AdminMode()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -35,6 +34,7 @@ class MyApp extends StatelessWidget {
           HomePageScreen.id: (context) => HomePageScreen(),
           AdminHomeScreen.id: (context) => AdminHomeScreen(),
           AddProduct.id: (context) => AddProduct(),
+          ManageProduct.id: (context) => ManageProduct(),
           EditProduct.id: (context) => EditProduct(),
         },
       ),

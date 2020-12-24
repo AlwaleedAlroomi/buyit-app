@@ -1,13 +1,12 @@
 import 'package:buyit/constants.dart';
 import 'package:buyit/provider/adminMode.dart';
 import 'package:buyit/provider/modelHud.dart';
-import 'file:///M:/flutter%20project/buyit/lib/screens/admin/AdminHome.dart';
-import 'file:///M:/flutter%20project/buyit/lib/screens/user/HomePage.dart';
+import 'package:buyit/screens/admin/AdminHome.dart';
+import 'package:buyit/screens/user/HomePage.dart';
 import 'package:buyit/screens/signup_screen.dart';
 import 'package:buyit/widgets/CustomTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:buyit/services/auth.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
