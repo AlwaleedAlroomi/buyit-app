@@ -5,6 +5,7 @@ class Product {
   String pDescription;
   String pCategory;
   String pId;
+  int pQuantity;
 
   Product(
       {this.pName,
@@ -12,5 +13,6 @@ class Product {
       this.pDescription,
       this.pCategory,
       this.pLocation,
-      this.pId});
+      this.pId,
+      this.pQuantity});
 }
