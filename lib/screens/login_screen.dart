@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
-  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
   static String id = 'LoginScreen';
   String _email, _password;
   final _auth = Auth();
@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kMainColor,
       body: Form(
-        key: _globalKey,
+        key: globalKey,
         child: ListView(
           children: <Widget>[
             Padding(
@@ -168,12 +168,12 @@ class LoginScreen extends StatelessWidget {
   void _validate(BuildContext context) async {
     final modelhud = Provider.of<ModelHud>(context, listen: false);
     modelhud.changeisLoading(true);
-    if (_globalKey.currentState.validate()) {
-      _globalKey.currentState.save();
+    if (globalKey.currentState.validate()) {
+      globalKey.currentState.save();
       if (Provider.of<AdminMode>(context, listen: false).isAdmin) {
         if (_password == adminPassword) {
           try {
-            await _auth.signIp(_email, _password);
+            await _auth.signIp(_email.trim(), _password.trim());
             Navigator.pushNamed(context, AdminHomeScreen.id);
           } catch (e) {
             modelhud.changeisLoading(false);
@@ -193,9 +193,10 @@ class LoginScreen extends StatelessWidget {
         }
       } else {
         try {
-          await _auth.signIp(_email, _password);
+          await _auth.signIp(_email.trim(), _password.trim());
           Navigator.pushNamed(context, HomePageScreen.id);
         } catch (e) {
+          modelhud.changeisLoading(false);
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text(e.message),

@@ -9,3 +9,7 @@ const kProductDescription = "productDescription";
 const kProductLocation = "productLocation";
 const kProductCategory = "productCategory";
 const kProductCollection = "products";
+const kJackets = "jackets";
+const kTrousers = "trousers";
+const kTshirts = "t-shirts";
+const kShoes = "shoes";

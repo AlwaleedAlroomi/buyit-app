@@ -1,9 +1,13 @@
 import 'package:buyit/constants.dart';
+import 'package:buyit/functsion.dart';
 import 'package:buyit/models/product.dart';
 import 'package:buyit/screens/admin/EditProduct.dart';
 import 'package:buyit/screens/admin/Manageproduct.dart';
+import 'package:buyit/screens/user/CartSCreen.dart';
+import 'package:buyit/screens/user/productinfo.dart';
 import 'package:buyit/services/auth.dart';
 import 'package:buyit/services/store.dart';
+import 'package:buyit/widgets/productView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +25,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   int _tabBarIndex = 0;
   int _bottomBarIndex = 0;
   final _store = Store();
+  List<Product> _products;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -93,9 +98,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
             body: TabBarView(
               children: <Widget>[
                 jacketView(),
-                Text("test"),
-                Text("test"),
-                Text("4"),
+                productView(kTrousers, _products),
+                productView(kTshirts, _products),
+                productView(kShoes, _products),
               ],
             ),
           ),
@@ -115,7 +120,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Icon(Icons.shopping_cart)
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, CartScreen.id),
+                    child: Icon(Icons.shopping_cart),
+                  )
                 ],
               ),
             ),
@@ -133,6 +141,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           List<Product> products = [];
           for (var doc in snapshot.data.docs) {
             var data = doc.data();
+
             products.add(Product(
               pId: doc.id,
               pName: data[kProductName],
@@ -142,12 +151,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
               pLocation: data[kProductLocation],
             ));
           }
+          _products = [...products];
+          products.clear();
+          products = getProductByCategory(kJackets, _products);
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, childAspectRatio: .8),
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: GestureDetector(
+                onTap: () => Navigator.pushNamed(context, ProductInfo.id,
+                    arguments: products[index]),
                 child: Stack(
                   children: <Widget>[
                     Positioned.fill(
