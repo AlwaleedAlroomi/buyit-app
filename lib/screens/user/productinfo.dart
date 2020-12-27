@@ -128,13 +128,13 @@ class _ProductInfoState extends State<ProductInfo> {
                 ),
                 ButtonTheme(
                   minWidth: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.12,
+                  height: MediaQuery.of(context).size.height * 0.08,
                   child: Builder(
                     builder: (context) => RaisedButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(10),
+                          topLeft: Radius.circular(10),
                         ),
                       ),
                       color: kMainColor,
@@ -174,11 +174,26 @@ class _ProductInfoState extends State<ProductInfo> {
   void addToCart(context, product) {
     CartItem _cartitem = Provider.of<CartItem>(context, listen: false);
     product.pQuantity = _quantity;
-    _cartitem.addProduct(product);
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Added to cart"),
-      ),
-    );
+    bool exist = false;
+    var productsInCart = _cartitem.products;
+    for (var productsInCart in productsInCart) {
+      if (productsInCart == product) {
+        exist = true;
+      }
+    }
+    if (exist) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("You have added this to cart"),
+        ),
+      );
+    } else {
+      _cartitem.addProduct(product);
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Added to cart"),
+        ),
+      );
+    }
   }
 }
