@@ -1,5 +1,6 @@
 import 'package:buyit/models/product.dart';
 import 'package:buyit/screens/admin/EditProduct.dart';
+import 'package:buyit/widgets/custom_menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,25 +115,5 @@ class _ManageProductState extends State<ManageProduct> {
         },
       ),
     );
-  }
-}
-
-//For handling tap in pop up menu item
-class MyPopupMenuItem<T> extends PopupMenuItem<T> {
-  final Widget child;
-  final Function onClick;
-  MyPopupMenuItem({@required this.child, @required this.onClick})
-      : super(child: child);
-  @override
-  PopupMenuItemState<T, PopupMenuItem<T>> createState() {
-    return MyPopupMenuItemState();
-  }
-}
-
-class MyPopupMenuItemState<T, PopupMenuItem>
-    extends PopupMenuItemState<T, MyPopupMenuItem<T>> {
-  @override
-  void handleTap() {
-    widget.onClick();
   }
 }

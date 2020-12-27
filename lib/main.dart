@@ -1,17 +1,17 @@
 import 'package:buyit/provider/adminMode.dart';
 import 'package:buyit/provider/cartItem.dart';
 import 'package:buyit/provider/modelHud.dart';
+import 'package:buyit/screens/admin/EditProduct.dart';
 import 'package:buyit/screens/admin/addProduct.dart';
 import 'package:buyit/screens/admin/Manageproduct.dart';
 import 'package:buyit/screens/admin/AdminHome.dart';
-import 'package:buyit/screens/admin/editProduct.dart';
 import 'package:buyit/screens/user/CartSCreen.dart';
 import 'package:buyit/screens/user/HomePage.dart';
 import 'package:buyit/screens/login_screen.dart';
 import 'package:buyit/screens/signup_screen.dart';
 import 'package:buyit/screens/user/productinfo.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 main() async {
