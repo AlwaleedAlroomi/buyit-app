@@ -8,4 +8,9 @@ class CartItem extends ChangeNotifier {
     products.add(product);
     notifyListeners();
   }
+
+  deleteProduct(Product product) {
+    products.remove(product);
+    notifyListeners();
+  }
 }

@@ -1,6 +1,9 @@
 import 'package:buyit/constants.dart';
 import 'package:buyit/models/product.dart';
 import 'package:buyit/provider/cartItem.dart';
+import 'package:buyit/screens/user/productinfo.dart';
+import 'package:buyit/services/store.dart';
+import 'package:buyit/widgets/custom_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +17,7 @@ class CartScreen extends StatelessWidget {
     final double appbarheight = AppBar().preferredSize.height;
     final double statusbarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         elevation: 0,
         leading: GestureDetector(
@@ -43,7 +47,8 @@ class CartScreen extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: GestureDetector(
-                      onTap: () => showCustomMenu(),
+                      onTapUp: (details) =>
+                          showCustomMenu(details, context, products[index]),
                       child: Container(
                         color: kSecondryColor,
                         height: screenHeight * 0.15,
@@ -111,24 +116,105 @@ class CartScreen extends StatelessWidget {
             );
           }
         }),
-        ButtonTheme(
-          minWidth: screenWidth,
-          height: screenHeight * 0.08,
-          child: RaisedButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
+        Builder(
+          builder: (context) => ButtonTheme(
+            minWidth: screenWidth,
+            height: screenHeight * 0.08,
+            child: RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
               ),
+              child: Text("Order".toUpperCase()),
+              color: kMainColor,
+              onPressed: () {
+                showCustomDialog(products, context);
+              },
             ),
-            child: Text("Order".toUpperCase()),
-            color: kMainColor,
-            onPressed: () {},
           ),
         )
       ]),
     );
   }
 
-  void showCustomMenu() {}
+  void showCustomMenu(details, context, product) async {
+    double dx = details.globalPosition.dx;
+    double dy = details.globalPosition.dy;
+    double dx2 = MediaQuery.of(context).size.width - dx;
+    double dy2 = MediaQuery.of(context).size.width - dy;
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(dx, dy, dx2, dy2),
+      items: [
+        MyPopupMenuItem(
+          child: Text("Edit"),
+          onClick: () {
+            Navigator.pop(context);
+            Provider.of<CartItem>(context, listen: false)
+                .deleteProduct(product);
+            Navigator.pushNamed(context, ProductInfo.id, arguments: product);
+          },
+        ),
+        MyPopupMenuItem(
+          child: Text("Delete"),
+          onClick: () {
+            Navigator.pop(context);
+            Provider.of<CartItem>(context, listen: false)
+                .deleteProduct(product);
+          },
+        ),
+      ],
+    );
+  }
+
+  void showCustomDialog(List<Product> products, context) async {
+    var price = getTotalPrice(products);
+    var address;
+    AlertDialog alertDialog = AlertDialog(
+      actions: <Widget>[
+        MaterialButton(
+          onPressed: () {
+            try {
+              Store _store = Store();
+              _store.storeOrders({
+                kTotalPrice: price,
+                kAddress: address,
+              }, products);
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Orderd Successfully"),
+              ));
+              Navigator.pop(context);
+            } catch (ex) {
+              print(ex.message);
+            }
+          },
+          child: Text("Confirm"),
+        )
+      ],
+      content: TextField(
+        onChanged: (value) {
+          address = value;
+        },
+        decoration: InputDecoration(
+          hintText: "Enter your address",
+        ),
+      ),
+      title: Text("Total price = \$ $price"),
+    );
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return alertDialog;
+        });
+  }
+
+  getTotalPrice(List<Product> products) {
+    var price = 0;
+    for (var product in products) {
+      price += product.pQuantity * int.parse(product.pPrice);
+    }
+    return price;
+  }
 }
