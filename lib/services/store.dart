@@ -26,4 +26,17 @@ class Store {
   editProduct(data, documentId) {
     _firestore.collection(kProductCollection).doc(documentId).update(data);
   }
+
+  storeOrders(data, List<Product> products) {
+    var documentRef = _firestore.collection(kOrders).doc();
+    documentRef.set(data);
+    for (var product in products) {
+      documentRef.collection(kOrderDetails).doc().set({
+        kProductName: product.pName,
+        kProductPrice: product.pPrice,
+        kProductQuantity: product.pQuantity,
+        kProductLocation: product.pLocation,
+      });
+    }
+  }
 }

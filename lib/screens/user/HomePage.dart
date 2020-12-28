@@ -1,8 +1,6 @@
 import 'package:buyit/constants.dart';
 import 'package:buyit/functsion.dart';
 import 'package:buyit/models/product.dart';
-import 'package:buyit/screens/admin/EditProduct.dart';
-import 'package:buyit/screens/admin/Manageproduct.dart';
 import 'package:buyit/screens/user/CartSCreen.dart';
 import 'package:buyit/screens/user/productinfo.dart';
 import 'package:buyit/services/auth.dart';

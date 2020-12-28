@@ -177,7 +177,7 @@ class _ProductInfoState extends State<ProductInfo> {
     bool exist = false;
     var productsInCart = _cartitem.products;
     for (var productsInCart in productsInCart) {
-      if (productsInCart == product) {
+      if (productsInCart.pName == product.pName) {
         exist = true;
       }
     }

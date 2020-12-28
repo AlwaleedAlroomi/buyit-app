@@ -4,6 +4,7 @@ import 'package:buyit/services/store.dart';
 import 'package:buyit/widgets/CustomTextField.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class EditProduct extends StatelessWidget {
   static String id = "EditProduct";
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
