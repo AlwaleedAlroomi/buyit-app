@@ -1,4 +1,5 @@
 import 'package:buyit/constants.dart';
+import 'package:buyit/screens/admin/OrdersScreen.dart';
 import 'package:buyit/screens/admin/addProduct.dart';
 import 'package:buyit/screens/admin/Manageproduct.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,9 @@ class AdminHomeScreen extends StatelessWidget {
               child: Text("Manage Product"),
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, OrderScreen.id);
+              },
               child: Text("View Orders"),
             ),
           ],

@@ -1,4 +1,4 @@
-#Mon Dec 28 07:41:03 AST 2020
+#Tue Dec 29 10:38:55 AST 2020
 base.0=/home/alwaleed/Documents/buyit/build/app/intermediates/transforms/r8/debug/0/classes.dex
 path.1=classes2.dex
 renamed.1=classes2.dex

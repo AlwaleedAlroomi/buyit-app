@@ -9,15 +9,29 @@ import 'package:flutter/material.dart';
 import 'package:buyit/services/auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
-class LoginScreen extends StatelessWidget {
-  final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+class LoginScreen extends StatefulWidget {
   static String id = 'LoginScreen';
+   final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
   String _email, _password;
+
   final _auth = Auth();
+
   bool isAdmin = false;
+
   final adminPassword = "Admin1234";
+
+  bool keepMeLoggedIn = false;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -26,7 +40,7 @@ class LoginScreen extends StatelessWidget {
       body: ModalProgressHUD(
         inAsyncCall: Provider.of<ModelHud>(context).isLoading,
         child: Form(
-          key: globalKey,
+          key: widget.globalKey,
           child: ListView(
             children: <Widget>[
               Padding(
@@ -63,8 +77,30 @@ class LoginScreen extends StatelessWidget {
                 hint: "Enter your email",
                 icon: Icons.email,
               ),
-              SizedBox(
-                height: height * .02,
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Row(
+                  children: <Widget>[
+                    Theme(
+                      data: ThemeData(
+                        unselectedWidgetColor: Colors.white,
+                      ),
+                      child: Checkbox(
+                          checkColor: kSecondryColor,
+                          activeColor: kMainColor,
+                          value: keepMeLoggedIn,
+                          onChanged: (value) {
+                            setState(() {
+                              keepMeLoggedIn = value;
+                            });
+                          }),
+                    ),
+                    Text(
+                      "Remember me",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
               CustomTextField(
                 onClick: (value) {
@@ -91,6 +127,9 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
+                      if (keepMeLoggedIn == true) {
+                        keepUserLoggedIn();
+                      }
                       _validate(context);
                     },
                   ),
@@ -114,7 +153,7 @@ class LoginScreen extends StatelessWidget {
                       Navigator.pushNamed(context, SignupScreen.id);
                     },
                     child: Text(
-                      "Signup",
+                      "Sign up",
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -173,8 +212,8 @@ class LoginScreen extends StatelessWidget {
   void _validate(BuildContext context) async {
     final modelhud = Provider.of<ModelHud>(context, listen: false);
     modelhud.changeisLoading(true);
-    if (globalKey.currentState.validate()) {
-      globalKey.currentState.save();
+    if (widget.globalKey.currentState.validate()) {
+      widget.globalKey.currentState.save();
       if (Provider.of<AdminMode>(context, listen: false).isAdmin) {
         if (_password == adminPassword) {
           try {
@@ -210,5 +249,10 @@ class LoginScreen extends StatelessWidget {
       }
     }
     modelhud.changeisLoading(false);
+  }
+
+  void keepUserLoggedIn() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool(kKeepMeLoggedIn, keepMeLoggedIn);
   }
 }
