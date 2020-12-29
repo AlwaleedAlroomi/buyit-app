@@ -1,6 +1,7 @@
 import 'package:buyit/constants.dart';
 import 'package:buyit/functsion.dart';
 import 'package:buyit/models/product.dart';
+import 'package:buyit/screens/login_screen.dart';
 import 'package:buyit/screens/user/CartSCreen.dart';
 import 'package:buyit/screens/user/productinfo.dart';
 import 'package:buyit/services/auth.dart';
@@ -9,9 +10,10 @@ import 'package:buyit/widgets/productView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageScreen extends StatefulWidget {
-  static String id = "HomepPageScreen";
+  static String id = "HomePageScreen";
 
   @override
   _HomePageScreenState createState() => _HomePageScreenState();
@@ -35,7 +37,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
               fixedColor: kMainColor,
               type: BottomNavigationBarType.fixed,
               currentIndex: _bottomBarIndex,
-              onTap: (value) {
+              onTap: (value) async{
+                if(value == 2){
+                  SharedPreferences pref = await SharedPreferences.getInstance();
+                  pref.clear();
+                  await _auth.SignOut();
+                  Navigator.popAndPushNamed(context, LoginScreen.id);
+                }
                 setState(() {
                   _bottomBarIndex = value;
                 });
@@ -46,9 +54,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.person), label: "test"),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: "test"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: "test"),
+                    icon: Icon(Icons.close), label: "Sign Out"),
               ],
             ),
             appBar: AppBar(
@@ -208,12 +214,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   getCurrentUser();
-  // }
+  @override
+  void initState() {
+     getCurrentUser();
+   }
 
-  // getCurrentUser() async {
-  //   _loggedUser = await _auth.getcurrent();
-  // }
+  getCurrentUser() async {
+     _loggedUser = await _auth.getUser();
+   }
 }

@@ -1,7 +1,7 @@
 # compiler: R8
 # compiler_version: 1.5.64
 # min_api: 16
-# pg_map_id: 4560dbb
+# pg_map_id: 1a2f47c
 android.support.v4.app.RemoteActionCompatParcelizer -> android.support.v4.app.RemoteActionCompatParcelizer:
     11:11:void <init>() -> <init>
     13:13:androidx.core.app.RemoteActionCompat read(androidx.versionedparcelable.VersionedParcel) -> read
@@ -25592,7 +25592,7 @@ io.flutter.plugin.platform.VirtualDisplayController$OneTimeOnDrawListener$1 -> i
     244:245:void run() -> run
 io.flutter.plugins.GeneratedPluginRegistrant -> io.flutter.plugins.GeneratedPluginRegistrant:
     14:14:void <init>() -> <init>
-    16:19:void registerWith(io.flutter.embedding.engine.FlutterEngine) -> registerWith
+    16:20:void registerWith(io.flutter.embedding.engine.FlutterEngine) -> registerWith
 io.flutter.plugins.firebase.auth.-$$Lambda$FlutterFirebaseAuthPlugin$0ix-SA3omSpP-D54s7DQO3jxlbg -> io.flutter.plugins.firebase.auth.a:
     java.util.Map f$1 -> b
     io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin f$0 -> a
@@ -26080,6 +26080,29 @@ io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult 
     17:19:void <init>() -> <init>
     22:22:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult failed(java.lang.Exception) -> a
     26:26:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult complete() -> a
+io.flutter.plugins.sharedpreferences.MethodCallHandlerImpl -> io.flutter.plugins.a.a:
+    android.content.SharedPreferences preferences -> a
+    45:47:void <init>(android.content.Context) -> <init>
+    51:117:void onMethodCall(io.flutter.plugin.common.MethodCall,io.flutter.plugin.common.MethodChannel$Result) -> a
+    121:132:void commitAsync(android.content.SharedPreferences$Editor,io.flutter.plugin.common.MethodChannel$Result) -> a
+    135:145:java.util.List decodeList(java.lang.String) -> a
+    149:160:java.lang.String encodeList(java.util.List) -> a
+    165:201:java.util.Map getAllPrefs() -> a
+io.flutter.plugins.sharedpreferences.MethodCallHandlerImpl$1 -> io.flutter.plugins.a.a$a:
+    android.content.SharedPreferences$Editor val$editor -> a
+    io.flutter.plugin.common.MethodChannel$Result val$result -> b
+    121:121:void <init>(io.flutter.plugins.sharedpreferences.MethodCallHandlerImpl,android.content.SharedPreferences$Editor,io.flutter.plugin.common.MethodChannel$Result) -> <init>
+    124:124:java.lang.Boolean doInBackground(java.lang.Void[]) -> a
+    129:130:void onPostExecute(java.lang.Boolean) -> a
+    121:121:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+    121:121:void onPostExecute(java.lang.Object) -> onPostExecute
+io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin -> io.flutter.plugins.a.b:
+    io.flutter.plugin.common.MethodChannel channel -> a
+    13:13:void <init>() -> <init>
+    25:26:void onAttachedToEngine(io.flutter.embedding.engine.plugins.FlutterPlugin$FlutterPluginBinding) -> a
+    34:37:void setupChannel(io.flutter.plugin.common.BinaryMessenger,android.content.Context) -> a
+    40:42:void teardownChannel() -> a
+    30:31:void onDetachedFromEngine(io.flutter.embedding.engine.plugins.FlutterPlugin$FlutterPluginBinding) -> b
 io.flutter.util.PathUtils -> c.a.d.a:
     20:23:java.lang.String getCacheDirectory(android.content.Context) -> a
     16:16:java.lang.String getDataDirectory(android.content.Context) -> b
